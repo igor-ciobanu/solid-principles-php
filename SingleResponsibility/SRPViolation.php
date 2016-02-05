@@ -2,7 +2,7 @@
 
 namespace SRPViolation;
 
-class Model
+class Modem
 {
     public function dial($pno)
     {
