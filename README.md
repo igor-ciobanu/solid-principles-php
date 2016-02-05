@@ -4,8 +4,13 @@
 
 These principles, when combined together, make it easy for a programmer to develop software that are easy to maintain and extend. They also make it easy for developers to avoid code smells, easily refactor code, and are also a part of the agile or adaptive software development.
 
-####Example:
+####Examples:
+
+####**SRP	The Single Responsibility Principle**
+A class should have one, and only one, reason to change.
+
 Let's say that we have a Modem class encapsulating the concept of a modem and its functionalities.
+
 ````
 class Modem
 {
@@ -77,16 +82,20 @@ class ModemImplementation implements DataChannel, Connection
     }
 }
 ````
+
 Even this very basic example shows how separating presentation from business logic, and respecting SRP, gives great advantages in our design's flexibility.
 
 ####UML diagram:
 ![alt tag](https://github.com/igariok1990/solid-principles-php/blob/master/SingleResponsibility/uml/uml.png)
 
-####**SRP	The Single Responsibility Principle**
-A class should have one, and only one, reason to change.
-
 ####**OCP	The Open Closed Principle**
 You should be able to extend a classes behavior, without modifying it.
+
+At first thought that might sound quite academic and abstract. What it means though is that we should strive to write code that doesn’t have to be changed every time the requirements change.
+
+
+####UML diagram:
+![alt tag](https://github.com/igariok1990/solid-principles-php/blob/master/OpenClose/uml/uml.png)
 
 ####**LSP	The Liskov Substitution Principle**
 Derived classes must be substitutable for their base classes.
