@@ -180,9 +180,256 @@ class Motorcycle extends Vehicle
 ####**LSP	The Liskov Substitution Principle**
 Derived classes must be substitutable for their base classes.
 
+Below is the classic example for which the Likov Substitution Principle is violated. Let's assume that the Rectangle object is used somewhere in the application. We extend the application and add the Square class. The square class is returned by a factory pattern, based on some conditions and we don't know the exact what type of object will be returned.
+
+```php
+class Rectangle
+{
+    /** @var  integer */
+    protected $width;
+    /** @var  integer */
+    protected $height;
+    /**
+     * @param $width
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+    /**
+     * @param $height
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+    }
+    /**
+     * @return mixed
+     */
+    public function getArea()
+    {
+        return $this->height * $this->width;
+    }
+}
+class Square extends Rectangle
+{
+    /**
+     * @param $width
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+        $this->height = $width;
+    }
+    /**
+     * @param $height
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+        $this->width = $height;
+    }
+}
+```
+Valid example
+```php
+class Vehicle
+{
+    public function startEngine()
+    {
+        // default engine start procedure
+    }
+    public function accelerate()
+    {
+        //default acceleration procedure
+    }
+}
+class Car extends Vehicle
+{
+    public function startEngine()
+    {
+        $this->checkTank();
+        parent::startEngine();
+    }
+    private function checkTank()
+    {
+        //check gas procedure
+    }
+}
+class ElectricCar extends Vehicle
+{
+    public function accelerate()
+    {
+        $this->increaseVoltage();
+    }
+    private function increaseVoltage()
+    {
+        // increase voltage procedure
+    }
+}
+class Driver
+{
+    function go(Vehicle $vehicle) {
+        $vehicle->startEngine();
+        $vehicle->accelerate();
+    }
+}
+```
+In conclusion this principle is just an extension of the Open Close Principle and it means that we must make sure that new derived classes are extending the base classes without changing their behavior.
+
+####UML diagram:
+![alt tag](https://github.com/igariok1990/solid-principles-php/blob/master/LiskovSubstitution/uml/uml.png)
+
 ####**ISP	The Interface Segregation Principle**
 Make fine grained interfaces that are client specific.
+
+Violated example
+```php
+interface IWorker
+{
+    public function work();
+    public function eat();
+}
+class Worker implements IWorker
+{
+    public function work()
+    {
+        // working
+    }
+    public function eat()
+    {
+        // eating in launch break
+    }
+}
+class Robot implements IWorker
+{
+    public function work()
+    {
+        // working 24 hours per day
+    }
+    public function eat()
+    {
+        // doesn't need this method
+    }
+}
+```
+Valid example:
+```php
+interface IWorkable
+{
+    public function work();
+}
+interface IFeedable
+{
+    public function eat();
+}
+class Worker implements IWorkable, IFeedable
+{
+    public function work()
+    {
+        // ....working
+    }
+    public function eat()
+    {
+        //.... eating in launch break
+    }
+}
+class Robot implements IWorkable
+{
+    public function work()
+    {
+        // ....working
+    }
+}
+class SuperWorker implements IWorkable, IFeedable
+{
+    public function work()
+    {
+        //.... working much more
+    }
+	public function eat()
+    {
+        //.... eating in launch break
+    }
+}
+```
+
+####UML diagram:
+![alt tag](https://github.com/igariok1990/solid-principles-php/blob/master/InterfaceSegregation/uml/uml.png)
 
 ####**DIP	The Dependency Inversion Principle**
 Depend on abstractions, not on concretions.
 
+Violated example
+```php
+class Worker
+{
+    public function work()
+    {
+        // ....working
+    }
+}
+class SuperWorker
+{
+    public function work()
+    {
+        //.... working much more
+    }
+}
+class Manager
+{
+    /** @var Worker */
+    private $worker;
+    /**
+     * @param Worker $worker
+     */
+    public function setWorker(Worker $worker)
+    {
+        $this->worker = $worker;
+    }
+    public function manage()
+    {
+        $this->worker->work();
+    }
+}
+```
+Valid example:
+```php
+interface IWorker
+{
+    public function work();
+}
+class Worker implements IWorker
+{
+    public function work()
+    {
+        // ....working
+    }
+}
+class SuperWorker  implements IWorker
+{
+    public function work()
+    {
+        //.... working much more
+    }
+}
+class Manager
+{
+    /** @var IWorker */
+    private $worker;
+    /**
+     * @param IWorker $worker
+     */
+    public function setWorker(IWorker $worker)
+    {
+        $this->worker = $worker;
+    }
+    public function manage()
+    {
+        $this->worker->work();
+	}
+}
+```
+
+####UML diagram:
+![alt tag](https://github.com/igariok1990/solid-principles-php/blob/master/DependencyInversion/uml/uml.png)
