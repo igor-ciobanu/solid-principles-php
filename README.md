@@ -11,7 +11,7 @@ A class should have one, and only one, reason to change.
 
 Let's say that we have a Modem class encapsulating the concept of a modem and its functionalities.
 
-````
+```php
 class Modem
 {
     public function dial($pno)
@@ -34,13 +34,13 @@ class Modem
         // Implementing receive() method.
     }
 }
-````
+```
 
 We can foud here that this class has 2 responsabilties:
 First is data chanel and second connection
 
 Mixing business logic with presentation is bad because it is against the Single Responsibility Principle (SRP). Take a look at the following code:
-````
+```php
 interface DataChannel
 {
 
@@ -81,9 +81,10 @@ class ModemImplementation implements DataChannel, Connection
         // Implementing hangup() method.
     }
 }
-````
+```
 
 Even this very basic example shows how separating presentation from business logic, and respecting SRP, gives great advantages in our design's flexibility.
+
 
 ####UML diagram:
 ![alt tag](https://github.com/igariok1990/solid-principles-php/blob/master/SingleResponsibility/uml/uml.png)
@@ -92,6 +93,85 @@ Even this very basic example shows how separating presentation from business log
 You should be able to extend a classes behavior, without modifying it.
 
 At first thought that might sound quite academic and abstract. What it means though is that we should strive to write code that doesn’t have to be changed every time the requirements change.
+
+Here is an example of GasStation the modality to put gas in vehicles, the code works but the problem will apear if we would like to put gas for another vehicle, for that we should update "putGasInVehicle()" method, that violate OPC
+
+```php
+class GasStation
+{
+    public function putGasInVehicle(Vehicle $vehicle)
+    {
+        if ($vehicle->getType() == 1)
+            $this->putGasInCar($vehicle);
+        elseif ($vehicle->getType() == 2)
+            $this->putGasInMotorcycle($vehicle);
+    }
+    public function putGasInCar(Car $car)
+    {
+        $car->setTank(50);
+    }
+    public function putGasInMotorcycle(Motorcycle $motorcycle)
+    {
+        $motorcycle->setTank(20);
+    }
+}
+class Vehicle
+{
+    protected $type;
+    protected $tank;
+    public function getType()
+    {
+        return $this->type;
+    }
+    public function setTank($tank)
+    {
+        $this->tank = $tank;
+    }
+}
+class Car extends Vehicle
+{
+    protected $type = 1;
+}
+class Motorcycle extends Vehicle
+{
+    protected $type = 2;
+}
+```
+
+After a little refactoring we got that:
+
+```php
+class GasStation
+{
+    public function putGasInVehicle(Vehicle $vehicle)
+    {
+       $vehicle->putGasIn();
+    }
+}
+abstract class Vehicle
+{
+    protected $tank;
+    public function setTank($tank)
+    {
+        $this->tank = $tank;
+    }
+    abstract public function putGasIn();
+}
+class Car extends Vehicle
+{
+    public function putGasIn()
+    {
+        $this->setTank(50);
+    }
+}
+class Motorcycle extends Vehicle
+{
+    public function putGasIn()
+    {
+        $this->setTank(20);
+    }
+}
+```
 
 
 ####UML diagram:
