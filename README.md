@@ -36,7 +36,7 @@ class Modem
 }
 ```
 
-We can foud here that this class has 2 responsabilties:
+We can find here that this class has 2 responsabilities:
 First is data chanel and second connection
 
 Mixing business logic with presentation is bad because it is against the Single Responsibility Principle (SRP). Take a look at the following code:
@@ -83,7 +83,7 @@ class ModemImplementation implements DataChannel, Connection
 }
 ```
 
-Even this very basic example shows how separating presentation from business logic, and respecting SRP, gives great advantages in our design's flexibility.
+Even this, very basic example shows how separating presentation from business logic, and respecting SRP, gives great advantages in our design's flexibility.
 
 
 ####UML diagram:
